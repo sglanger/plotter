@@ -8,15 +8,6 @@
 # Notes: If you are building from scratch, run this whole thing
 #	If pulling from Docker hub, just run the RUN and EXEC lines
 ##########################################
-
-############## main ###############
-# Purpose: Based on command line arg either
-#		a) build all Docker from scratch or
-#		b) kill running docker or
-#		c) start Docker or
-#		d) restart
-# Caller: user
-###############################
 clear
 
 vmtype=$(sudo virt-what|grep virtualbox)
@@ -30,7 +21,7 @@ else
 	echo $vmtype
 	host="172.17.0.1"
 fi
-ROOT="/home/site/plotter"
+ROOT="/home/site"
 
 image="jodogne/orthanc-plugins"
 instance="plotter"
@@ -43,9 +34,9 @@ case "$1" in
 
 		# install as a service
   		# https://computingforgeeks.com/how-to-run-java-jar-application-with-systemd-on-linux/
-	#	sudo cp $ROOT/$srvc/$srvc.service /usr/lib/systemd/system/$srvc.service
-	#	sudo systemctl daemon-reload
-	#	sudo systemctl enable $srvc
+		sudo cp $ROOT/$srvc/$srvc.service /usr/lib/systemd/system/$srvc.service
+		sudo systemctl daemon-reload
+		sudo systemctl enable $srvc
 
 		$0 start
 	;;
@@ -55,10 +46,6 @@ case "$1" in
 		sudo docker exec  -it $instance /bin/bash 
 	;;
 
-
-	conn_r)
-		sudo docker exec -u root -it $instance /bin/bash
-	;;
 
 	restart)
 		$0 stop
