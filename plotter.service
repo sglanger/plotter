@@ -1,0 +1,26 @@
+[Unit]
+# https://www.howtogeek.com/687970/how-to-run-a-linux-program-at-startup-with-systemd/
+# from https://computingforgeeks.com/how-to-run-java-jar-application-with-systemd-on-linux/
+Description=plotter
+Requires=docker.service
+After=docker.service
+
+[Service]
+# Work in HOME_dir
+WorkingDirectory=/home/site/plotter
+
+# Can not be a variable?!?
+User=root
+# Command to startup.  Be sure to properly escape environment variables
+ExecStart=/home/site/run_dock.sh start
+ExecStop=/home/site/run_dock.sh stop
+#ExecStatus=/home/vagrant/ewocs2/files/orthanc/run_dock.sh status
+Restart=on-failure
+RestartSec=10
+
+# A simple command does not fork
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
+
