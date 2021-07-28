@@ -21,9 +21,42 @@ class fWatcher(FileSystemEventHandler):
       self.last_modified = time.time()   
       self.path=path
 	
-
       return
 
+
+    def call_analytic(self, path):
+    ########################################
+    #
+    ######################################
+
+        out_dir = self.path + '/output'
+        event_path = path
+        ana_path = '/home/site/plotter/'
+        #print ("in call_ana " + path)
+
+        if 'input' in path :
+          sr_path=self.path  + '/input'
+          cmd_str= ana_path + 'prepper.py'
+
+        if 'pending' in path :
+          sr_path = self.path + '/pending'
+          cmd_str= ana_path + '/??.py'
+
+
+        for f in os.listdir(sr_path):        
+            print (f)
+
+        try:
+          cmd_str = cmd_str  
+	  # when I add the below to pass the file to process to the above get FileNotFOund
+	  # + ' ' + sr_path + '/' +f   # out_dir
+          print (cmd_str )
+          ret = subprocess.check_output(cmd_str)
+          print (ret.decode('utf-8'))
+        except:
+          print (ret.decode('utf-8'))
+        
+        return 
 
     def on_modified(self, event):
     ###############################################
@@ -52,6 +85,7 @@ class fWatcher(FileSystemEventHandler):
     ##################################
 
       observer = Observer()
+      self.observer = observer
       res = observer.schedule(handle, path=self.path, recursive=True)
       print (res)
       observer.start()
@@ -64,39 +98,6 @@ class fWatcher(FileSystemEventHandler):
         observer.join()
 
       return
-
-
-    def call_analytic(self, path):
-    ########################################
-    #
-    ######################################
-
-        out_dir = self.path + '/output'
-        event_path = path
-        ana_path = '/home/site/plotter/'
-        #print ("in call_ana " + path)
-
-        if 'input' in path :
-          sr_path=self.path  + '/input'
-          cmd_str= ana_path + '/prepper.py'
-
-        if 'pending' in path :
-          sr_path = self.path + '/pending'
-          cmd_str= ana_path + '/??.py'
-
-
-        for f in os.listdir(path):        
-            print (f)
-
-        try:
-          cmd_str = cmd_str  + ' ' + sr_path   # out_dir
-          print (cmd_str )
-          ret = subprocess.check_output(cmd_str)
-        except:
-          print (ret.decode('utf-8'))
-        
-        return 
-
 
 
 if __name__ == "__main__":
