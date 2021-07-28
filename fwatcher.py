@@ -73,20 +73,23 @@ class fWatcher(FileSystemEventHandler):
 
         out_dir = self.path + '/output'
         event_path = path
+        ana_path = '/home/site/plotter/'
         #print ("in call_ana " + path)
 
         if 'input' in path :
-          path=self.path  + '/input'
-          cmd_str= self.path + '/files/tools/pyClasses/dumpTags.py'
+          sr_path=self.path  + '/input'
+          cmd_str= ana_path + '/prepper.py'
 
-        if 'output' in path :
-          path = self.path + '/output'
+        if 'pending' in path :
+          sr_path = self.path + '/pending'
+          cmd_str= ana_path + '/??.py'
+
 
         for f in os.listdir(path):        
             print (f)
 
         try:
-          cmd_str = cmd_str  + ' ' + path   # out_dir
+          cmd_str = cmd_str  + ' ' + sr_path   # out_dir
           print (cmd_str )
           ret = subprocess.check_output(cmd_str)
         except:

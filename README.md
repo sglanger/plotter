@@ -17,14 +17,16 @@
 
 # Details
 * fwatcher: a python watchdog process that monitors a ROOT folder (and below) for new files drops. When it finds same it bases the action taken based on the folder the file was dropped into see fwatcher:call_analytic for details. Can be installed as a service or run manually. 
-* DICOM info: AET=PLOTTER, port=9010
+* DICOM receiver info: AET=PLOTTER, port=9010
 * ssh in: port=2200, site/sitePass
+* Orthanc DICOM info:
+
 
 # HOWTO
 * Adding new functions: 
 	* For example, the /input handler (prepper.py) when called by fwatcher should: 
-		* check the SR is an SR, delete if not 
+		* check the file is an SR, delete if not 
 		* make a /tmp/patID folder above /pipeline, move the /input/SR to it 
 		* crack the header for demographics and pull priors to it (eg. /tmp/patID/new and /tmp/patID/priors
-		* pass the loaded patID folder to /pipeline/pending folrder for pickup by the next handler
+		* pass the loaded patID folder to /pipeline/pending folder for pickup by the next handler
 
