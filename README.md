@@ -20,7 +20,7 @@
 * DICOM receiver info: AET=PLOTTER, port=9010
 * ssh in: port=2200, site/sitePass
 * Orthanc DICOM info: AET=
-* Landing page: on virtualbox VM, http://localhost:7500
+* Orthanc Web page: on virtualbox VM, http://localhost:8042
 
 
 # HOWTO
