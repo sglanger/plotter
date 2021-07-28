@@ -38,7 +38,7 @@ case "$1" in
 		sudo systemctl daemon-reload
 		sudo systemctl enable $srvc
 
-		$0 start
+		# $0 start
 	;;
 
 	conn)

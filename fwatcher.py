@@ -107,7 +107,7 @@ if __name__ == "__main__":
 
       ret = subprocess.check_output('pwd')
       cwd = ret.decode('utf-8') 
-      path = cwd.rstrip()
+      path = cwd.rstrip() + '/pipeline'
       print (cwd)
 
       event_handler = fWatcher(path)
