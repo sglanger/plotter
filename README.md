@@ -18,6 +18,7 @@
 # Details
 * fwatcher: a python watchdog process that monitors a ROOT folder (and below) for new files drops. When it finds same it bases the action taken based on the folder the file was dropped into see fwatcher:call_analytic for details. Can be installed as a service or run manually. 
 * DICOM info: AET=PLOTTER, port=9010
+* ssh in: port=2200, site/sitePass
 
 # HOWTO
 * Adding new functions: 
