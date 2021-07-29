@@ -14,19 +14,60 @@ import pydicom
 
 def checkDICOM(path):
 #############################
-#
-#
+# Purpose: if DICOM dispatch prefetch
+# tasks, else delete
 ############################
 
   try :
     ds = pydicom.dcmread(path)
-  except:
+    tags = getDemog(ds)
+    mkTmpDir (tags, path)
+  except e:
+    print (e)
     print('not dicom, deleting it and exiting')
     os.system('rm ' + path)
     sys.exit(1)
 
   return
 
+
+def getDemog(file):
+############################
+# Purpose: get Patient ID and 
+#  exam info
+###########################
+  tags = []
+
+  for tag in file:
+    #print (tag)
+    if 'Study Description' in str(tag): tags.append(str(tag)) 
+    if 'Patient\s Name' in str(tag): tags.append(str(tag)) 
+    if 'Patient ID' in str(tag): tags.append(str(tag)) 
+    if 'SOP Class UID' in str(tag): tags.append(str(tag)) 
+
+  #  this not working
+  #tags.append(file.PatientsName)
+  #tags.append(file.SOPClassUID)
+  #tags.append(file.PatientID)
+  #tags.append(file.StudyDescription)
+
+  #print (tags)
+  return tags
+
+def mkTmpDir(list, file):
+############################
+# Purpose: use PatId to make 
+#  a temp Dir
+###########################
+
+  for i in list:
+    print (i)
+    #if 'ID' in str(i): PatID=str(i)
+
+  tmpDir = os.getcwd() + '/tmp/' # + PatID
+  print (tmpDir)
+  
+  return 
 
 if __name__ == "__main__":
 #############################################################
