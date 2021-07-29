@@ -48,11 +48,9 @@ class fWatcher(FileSystemEventHandler):
 
         try:
           cmd_str = cmd_str  + ' ' + sr_path + '/' +f   # out_dir
-	  # when I add the below to pass the file to process to the above get FileNotFOund
-	  # + ' ' + sr_path + '/' +f   # out_dir
           print (cmd_str )
-          #ret = subprocess.check_output(cmd_str)
           os.system(cmd_str)
+          #ret = subprocess.check_output(cmd_str)
           #print (ret.decode('utf-8'))
         except:
           print (ret.decode('utf-8'))

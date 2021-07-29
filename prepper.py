@@ -7,11 +7,25 @@
 #
 # Author: ???
 # Date : ???
-#
-
+##################################
  
 import time, os, sys
 import pydicom
+
+def checkDICOM(path):
+#############################
+#
+#
+############################
+
+  try :
+    ds = pydicom.dcmread(path)
+  except:
+    print('not dicom, deleting it and exiting')
+    os.system('rm ' + path)
+    sys.exit(1)
+
+  return
 
 
 if __name__ == "__main__":
@@ -22,7 +36,17 @@ if __name__ == "__main__":
 #
 # Advice, this does not need to be a class
 ############################################################
-      #os.system('clear')
-      print ('in prepper')
-      sys.exit()
+  #os.system('clear')
+  print ('in prepper')
+
+  # use cmd line arg to locate projectDir
+  if len(sys.argv ) != 2 :
+    print ("Incorrect Usage: Must include -input file path- ") 
+    print (">./prepper.py file_path ")
+    sys.exit(1)
+
+  filePath = sys.argv[1]
+  checkDICOM(filePath)
+
+  sys.exit()
 
