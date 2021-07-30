@@ -2,11 +2,11 @@
 
 #################################### prepper.py
 # Purpose: take a files dropped into /pipeline/input, 
-#	maake sure it is a SR, if so  fetch priors and 
+#	maake sure it is a SR, if so fetch related priors and 
 #	pass to the next link in the pipeline
 #
-# Author: ???
-# Date : ???
+# Author: SG Langer 
+# Date : July 2021
 ##################################
  
 import time, os, sys
@@ -14,16 +14,15 @@ import pydicom
 
 def checkDICOM(path):
 #############################
-# Purpose: if DICOM dispatch prefetch
-# tasks, else delete
+# Purpose: see if DICOM, if yes dispatch prefetch
+# tasks, else delete.
 ############################
 
   try :
     ds = pydicom.dcmread(path)
     tags = getDemog(ds)
-    mkTmpDir (tags, path)
-  except e:
-    print (e)
+    tmpDir = mkTmpDir (tags, path)
+  except :
     print('not dicom, deleting it and exiting')
     os.system('rm ' + path)
     sys.exit(1)
@@ -62,12 +61,24 @@ def mkTmpDir(list, file):
 
   for i in list:
     print (i)
-    #if 'ID' in str(i): PatID=str(i)
+    if 'Patient ID' in str(i): 
+      PatID=i[i.index('LO:') +5 : -1]
 
-  tmpDir = os.getcwd() + '/tmp/' # + PatID
+  tmpDir = os.getcwd() + '/tmp/'  + PatID
   print (tmpDir)
-  
-  return 
+
+  try:
+    # make tmp folder for this patient
+    os.system('mkdir ' +tmpDir)
+    os.system('mkdir ' +tmpDir +'/priors')
+    # and now move DICOM from input to /tmp/patID
+    os.system('mv ' + file +' ' + tmpDir)  
+  except: 
+    print('could not make  folder ' + tmpDir)
+    pass
+
+  return tmpDir
+
 
 if __name__ == "__main__":
 #############################################################
