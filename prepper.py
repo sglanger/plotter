@@ -22,6 +22,7 @@ def checkDICOM(path):
     ds = pydicom.dcmread(path)
     tags = getDemog(ds)
     tmpDir = mkTmpDir (tags, path)
+    qrySR(tmpDir, tags)
   except :
     print('not dicom, deleting it and exiting')
     os.system('rm ' + path)
@@ -60,7 +61,7 @@ def mkTmpDir(list, file):
 ###########################
 
   for i in list:
-    print (i)
+    #print (i)
     if 'Patient ID' in str(i): 
       PatID=i[i.index('LO:') +5 : -1]
 
@@ -72,13 +73,46 @@ def mkTmpDir(list, file):
     os.system('mkdir ' +tmpDir)
     os.system('mkdir ' +tmpDir +'/priors')
     # and now move DICOM from input to /tmp/patID
-    print (file)
+    #print (file)
     os.system('mv ' + file +' ' + tmpDir)  
   except: 
     print('could not make  folder ' + tmpDir)
     pass
 
   return tmpDir
+
+def qrySR(path, list):
+##########################################
+# Purpose: find relevent prios based on PatID and studyType
+# Ref: https://support.dcmtk.org/docs/findscu.html
+# caller: chkDICOM
+#########################################
+
+  # on board VNA info
+  # SGL 31 Jul; echoscu to this is failing, why? Orthanc is up
+  AET= 'orthanc'
+  PORT = '4242'
+  PEER = '127.0.0.1'
+
+  for i in list:
+    #print (i)
+    if 'Patient ID' in str(i): 
+      PatID=i[i.index('LO:') +5 : -1]
+    if 'Description' in str(i): 
+      stdyDescrip=i[i.index('LO:') +5 : -1]
+
+  cmdStr = 'findscu -P -k PatientID=\"' + PatID  + '\" -k StudyDescription=\"' + stdyDescrip + '\" '  \
+    + PEER + ' ' + PORT 
+
+  try:
+    print (cmdStr)
+    os.system(cmdStr)
+    # once the C-FIND finds studies, filter on SR objects, then C-Move them to
+    # /tmp/patID/priors
+  except :
+    print ('C-FIND blew up')
+
+  return
 
 
 if __name__ == "__main__":
