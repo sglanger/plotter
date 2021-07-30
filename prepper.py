@@ -72,6 +72,7 @@ def mkTmpDir(list, file):
     os.system('mkdir ' +tmpDir)
     os.system('mkdir ' +tmpDir +'/priors')
     # and now move DICOM from input to /tmp/patID
+    print (file)
     os.system('mv ' + file +' ' + tmpDir)  
   except: 
     print('could not make  folder ' + tmpDir)
