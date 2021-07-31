@@ -30,7 +30,6 @@ class fWatcher(FileSystemEventHandler):
     ######################################
 
         out_dir = self.path + '/output'
-        event_path = path
         ana_path = '/home/site/plotter/'
         #print ("in call_ana " + path)
 
@@ -40,7 +39,7 @@ class fWatcher(FileSystemEventHandler):
 
         if 'pending' in path :
           sr_path = self.path + '/pending'
-          cmd_str= ana_path + '/??.py'
+          cmd_str= ana_path + 'dispatcher.py'
 
 
         for f in os.listdir(sr_path):        
@@ -68,9 +67,10 @@ class fWatcher(FileSystemEventHandler):
         res=res[1:res.index(":")]
        	#print(f'Event type: {event.event_type}  path : {event.src_path}')
 
-        if (res != 'FileModifiedEvent' ) :
-            print ("early return")
+        if (res != 'FileModifiedEvent' and 'pending' not in str(event)  ) :
+            print ("early return event=" + str(event))
             return
+ 
         else:
             self.last_modified = time.time()
             self.call_analytic(event.src_path)

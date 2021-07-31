@@ -22,13 +22,14 @@
 	* checks that its a DICOM SR, deletes and exits if not
 	* if yes, makes a new folder under /tmp with that patientID
 	* moves input/DICOM-SR to /tmp/patID
-	* searches VNA for relevent prior SRs, puts them in /tmp/patID/priors, calls builder, then exits
-* builder.py, this is where the magic happens
-	* has a big config file that tells it what to do per study description
-	* does those things, assembles the package as new SR and/or plot
+	* searches VNA for relevent prior SRs, puts them in /tmp/patID/priors, 
+	* mv patID/ to pipeline/pending, then exits
+* dispatcher.py, this is where the magic happens
+	* based on study description (and other info) decides what handle to call
+	* handler does things, assembles the package as new SR and/or plot
 	* moves that result to /pipeline/pending/patID
 * fwatcher sees new folder in /pipeline/pending and calls sender.py
-* sender sends the package to LBnet via a C-Store, purges /pipeline/pending/patID, exits
+* sender.py sends the package to LBnet via a C-Store, purges /pipeline/pending/patID, exits
 
 
 # Details

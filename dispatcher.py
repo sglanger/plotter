@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 
 #################################### prepper.py
-# Purpose: take a files dropped into /pipeline/input, 
-#	maake sure it is a SR, if so fetch related priors and 
-#	pass to the next link in the pipeline
+# Purpose: take a patID folder  dropped into /pipeline/pending, 
+#	classify what kind of exam it is and call proper hander, 
+#	then pass to the next link in the pipeline
 #
 # Author: SG Langer 
 # Date : July 2021
@@ -22,8 +22,6 @@ def checkDICOM(path):
     ds = pydicom.dcmread(path)
     tags = getDemog(ds)
     tmpDir = mkTmpDir (tags, path)
-    fetchSR(tmpDir, tags)
-    moveToPending(tmpDir)
   except :
     print('not dicom, deleting it and exiting')
     os.system('rm ' + path)
@@ -55,26 +53,6 @@ def getDemog(file):
   #print (tags)
   return tags
 
-def moveToPending(path):
-################################
-#
-#
-#
-################################
-
-  root = os.getcwd()
-  root = root + '/pipeline/pending'
-  cmdStr = 'mv -f ' + path + ' ' + root
-  try :
-    print (cmdStr)
-    os.system(cmdStr)
-  except:
-    os.system('rm -Rf /pipeline/pending/* ')
-    os.system(cmdStr)
-
-  return
-
-
 def mkTmpDir(list, file):
 ############################
 # Purpose: use PatId to make 
@@ -102,50 +80,17 @@ def mkTmpDir(list, file):
 
   return tmpDir
 
-def fetchSR(path, list):
-##########################################
-# Purpose: find relevent prios based on PatID and studyType
-# Ref: https://support.dcmtk.org/docs/findscu.html
-# caller: chkDICOM
-#########################################
-
-  # on board VNA info
-  # SGL 31 Jul; echoscu to this is failing, why? Orthanc is up
-  AET= 'orthanc'
-  PORT = '4242'
-  PEER = '127.0.0.1'
-
-  for i in list:
-    #print (i)
-    if 'Patient ID' in str(i): 
-      PatID=i[i.index('LO:') +5 : -1]
-    if 'Description' in str(i): 
-      stdyDescrip=i[i.index('LO:') +5 : -1]
-
-  cmdStr = 'findscu -P -k PatientID=\"' + PatID  + '\" -k StudyDescription=\"' + stdyDescrip + '\" '  \
-    + PEER + ' ' + PORT 
-
-  try:
-    print (cmdStr)
-    os.system(cmdStr)
-    # once the C-FIND finds studies, filter on SR objects, then C-Move them to
-    # /tmp/patID/priors
-  except :
-    print ('C-FIND blew up')
-
-  return
 
 
 if __name__ == "__main__":
 #############################################################
 # Purpose: be called by fwatcher.py, create a /patID folder 
-#  in /tmp, stuff it with priors if any, then move whole
-#  /patID to pipeline/pending	
+#  from pipeline/pending to /tmp, call proper handler,
+#  then pass reults to pipeline/send
 #
-# Advice, this does not need to be a class
 ############################################################
   #os.system('clear')
-  print ('in prepper')
+  print ('in dispatcher')
 
   # use cmd line arg to locate projectDir
   if len(sys.argv ) != 2 :
@@ -153,7 +98,9 @@ if __name__ == "__main__":
     print (">./prepper.py file_path ")
     sys.exit(1)
 
-  checkDICOM(sys.argv[1])
+  filePath = sys.argv[1]
+  print (filePath)
+ # checkDICOM(filePath)
 
   sys.exit()
 
