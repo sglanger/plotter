@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-#################################### prepper.py
+#################################### dispatcher.py
 # Purpose: take a patID folder  dropped into /pipeline/pending, 
 #	classify what kind of exam it is and call proper hander, 
 #	then pass to the next link in the pipeline
@@ -89,7 +89,7 @@ if __name__ == "__main__":
   # use cmd line arg to locate projectDir
   if len(sys.argv ) != 2 :
     print ("Incorrect Usage: Must include -input file path- ") 
-    print (">./prepper.py file_path ")
+    print (">./dispatcher.py file_path ")
     sys.exit(1)
 
   filePath = sys.argv[1]
