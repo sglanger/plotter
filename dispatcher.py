@@ -18,14 +18,17 @@ def checkDICOM(path):
 # tasks, else delete.
 ############################
 
+  tmp = os.getcwd() + '/tmp/'
+  patID = path[path.index('pending')+8 : ]
+
   try :
-    ds = pydicom.dcmread(path)
-    tags = getDemog(ds)
-    tmpDir = mkTmpDir (tags, path)
+    os.system('mv -f ' + path + ' ' + tmp)
+    tags = getDemog(tmp + patID)
+    classify(tags, tmp + patID)
   except :
-    print('not dicom, deleting it and exiting')
-    os.system('rm ' + path)
-    sys.exit(1)
+    print('some error ')
+    #os.system('rm ' + path)
+    pass
 
   return
 
@@ -33,11 +36,17 @@ def checkDICOM(path):
 def getDemog(file):
 ############################
 # Purpose: get Patient ID and 
-#  exam info
+#  exam info needed to classify a handler
 ###########################
   tags = []
+  #print ('file = '+  file)
+  for i in os.listdir(file) :
+    #print (i)
+    if 'dcm' in i : break
 
-  for tag in file:
+  ds = pydicom.dcmread(i)
+  
+  for tag in ds:
     #print (tag)
     if 'Study Description' in str(tag): tags.append(str(tag)) 
     if 'Patient\s Name' in str(tag): tags.append(str(tag)) 
@@ -47,32 +56,23 @@ def getDemog(file):
   #print (tags)
   return tags
 
-def mkTmpDir(list, file):
+def classify(list, file):
 ############################
 # Purpose: use PatId to make 
 #  a temp Dir
 ###########################
 
   for i in list:
+    i = str(i)
     #print (i)
-    if 'Patient ID' in str(i): 
-      PatID=i[i.index('LO:') +5 : -1]
+    if 'Patient ID' in i: PatID=i[i.index('LO:') +5 : -1]
+    if 'Description' in i: Descrip=i[i.index('LO:') +5 : -1]
 
-  tmpDir = os.getcwd() + '/tmp/'  + PatID
-  print (tmpDir)
-
-  try:
-    # make tmp folder for this patient
-    os.system('mkdir ' +tmpDir)
-    os.system('mkdir ' +tmpDir +'/priors')
-    # and now move DICOM from input to /tmp/patID
-    #print (file)
-    os.system('mv ' + file +' ' + tmpDir)  
-  except: 
-    print('could not make  folder ' + tmpDir)
-    pass
-
-  return tmpDir
+  print (PatID)
+  print (Descrip)
+  
+  # now in here call some handler for this exam type
+  return 
 
 
 
@@ -93,8 +93,7 @@ if __name__ == "__main__":
     sys.exit(1)
 
   filePath = sys.argv[1]
-  print (filePath)
- # checkDICOM(filePath)
+  checkDICOM(filePath)
 
   sys.exit()
 

@@ -43,11 +43,12 @@ class fWatcher(FileSystemEventHandler):
 
 
         for f in os.listdir(sr_path):        
-            print (f)
+            #print (f)
+            x = 1
 
         try:
           cmd_str = cmd_str  + ' ' + sr_path + '/' +f   # out_dir
-          print (cmd_str )
+          #print (cmd_str )
           os.system(cmd_str)
           #ret = subprocess.check_output(cmd_str)
           #print (ret.decode('utf-8'))
