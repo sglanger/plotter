@@ -39,7 +39,7 @@
 * Orthanc DICOM info: AET=
 * Orthanc Web page: on virtualbox VM, http://localhost:8042
 
-# Websequnece steps
+# Websequence steps
 * from here down paste into websequence.com
 
 title Plotter Data flow
