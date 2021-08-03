@@ -44,12 +44,6 @@ def getDemog(file):
     if 'Patient ID' in str(tag): tags.append(str(tag)) 
     if 'SOP Class UID' in str(tag): tags.append(str(tag)) 
 
-  #  this not working
-  #tags.append(file.PatientsName)
-  #tags.append(file.SOPClassUID)
-  #tags.append(file.PatientID)
-  #tags.append(file.StudyDescription)
-
   #print (tags)
   return tags
 
