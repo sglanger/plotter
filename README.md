@@ -44,38 +44,62 @@
 
 title Plotter Data flow
 
+
 participant SRsource
+
 participant LBnet
+
 participant dcmRcv
+
 participant input
+
 participant pending
+
 participant fwatcher
 
 
 SRsource->LBnet: dcm SRsource
+
 LBnet->LBnet: norm value \n names
+
 LBnet->dcmRcv: dcm normed SR
+
 dcmRcv->input: fileSys
+
 fwatcher->input: event-handler new SR
+
 fwatcher-->prepper: launches to SRsource
 
 prepper->input: fileSys fetch SR
+
 prepper->prepper: reads demog
+
 prepper->VNA: dcm fetches priors
+
 prepper->pending: fileSys new SR \n with priors
 
 fwatcher->pending: event-handler new pkg
+
 fwatcher-->dispatcher: launches to pkg
+
 dispatcher->pending: fileSys fetch pkg
+
 dispatcher->dispatcher: classify study type
+
 dispatcher->handler: fileSys pkg
+
 handler->handler: make plots
+
 handler->sending: fileSys plots, results
 
 fwatcher->sending: event_handler ready pkg
+
 fwatcher-->sender: launches to pkg
+
 sender->sending: fileSys results pkg
+
 sender->LBnet: dcm or fileSys results
+
 LBnet->PS360: webAPI
 
 
