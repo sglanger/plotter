@@ -41,6 +41,10 @@ class fWatcher(FileSystemEventHandler):
           sr_path = self.path + '/pending'
           cmd_str= ana_path + 'dispatcher.py'
 
+        if 'sending' in path :
+          sr_path = self.path + '/sending'
+          cmd_str= ana_path + 'sender.py'
+
 
         for f in os.listdir(sr_path):        
             #print (f)
